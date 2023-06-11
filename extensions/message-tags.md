@@ -42,11 +42,10 @@ The message pseudo-BNF, as defined in [RFC 1459, section 2.3.1][rfc1459] is exte
     <message>       ::= ['@' <tags> <SPACE>] [':' <prefix> <SPACE> ] <command> [params] <crlf>
     <tags>          ::= <tag> [';' <tag>]*
     <tag>           ::= <key> ['=' <escaped_value>]
-    <key>           ::= [ <client_prefix> ] [ <vendor> '/' ] <key_name>
+    <key>           ::= [ <client_prefix> ] <key_name>
     <client_prefix> ::= '+'
-    <key_name>      ::= <non-empty sequence of ascii letters, digits, hyphens ('-')>
+    <key_name>      ::= <non-empty sequence of bytes except NUL, CR, LF, semicolon (`;`), equals (`=`), and SPACE>
     <escaped_value> ::= <sequence of zero or more utf8 characters except NUL, CR, LF, semicolon (`;`) and SPACE>
-    <vendor>        ::= <host>
 
 The ordering of tags is not meaningful.
 
@@ -159,6 +158,7 @@ There are two tag namespaces:
 
 Names which contain a slash character (`/`) designate a vendor-specific tag namespace.
 These names are prefixed by a valid DNS domain name.
+The suffix SHOULD be a non-empty sequence of ascii letters, digits, hyphens ('-').
 
 For example: `znc.in/server-time`.
 
@@ -171,6 +171,7 @@ Vendor-Specific tags should be submitted to the IRCv3 working group for consider
 
 The `draft/` vendor namespace may be used when the working group is considering tag specifications.
 However, vendor names should be preferred.
+The suffix SHOULD be a non-empty sequence of ascii letters, digits, hyphens ('-').
 
 While tags are in draft status, they may need to be given a new identifier, to prevent
 implementation compatibility issues. When updating a draft tag key name, the
